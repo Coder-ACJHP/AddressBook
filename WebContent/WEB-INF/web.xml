@@ -22,13 +22,15 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
+	<jsp-config>
+	  <jsp-property-group>
+	    <url-pattern>*.jsp</url-pattern>
+	    <trim-directive-whitespaces>true</trim-directive-whitespaces>
+	  </jsp-property-group>
+	</jsp-config>
+
 	<error-page>
-		<error-code>404</error-code>
-		<location>/404</location>
+		<location>/error</location>
 	</error-page>
-	<!-- All Internal Server Errors -->
-	<error-page>
-    	<error-code>500</error-code> 
-    <location>/500</location>
-</error-page>	
+	
 </web-app>

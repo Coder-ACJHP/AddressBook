@@ -26,10 +26,9 @@ public class ExportController {
 	private ServiceDao serviceDao;
 	
 	@GetMapping("saveAsJson")
-	public String saveAsJson(final HttpServletResponse response, final RedirectAttributes redirectAttributes) {
+	public void saveAsJson(final HttpServletResponse response, final RedirectAttributes redirectAttributes) {
 		
 		cookFileToDownload("json", response, redirectAttributes);
-		return "redirect:allAddressess";
 	}
 	
 	private void cookFileToDownload(String FILE_TYPE, HttpServletResponse response,
@@ -38,22 +37,34 @@ public class ExportController {
 		final List<Address> addressList = serviceDao.findAllAddresses();
 		final Gson gson = new Gson();
 		
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		
 		try {
+			
 			String lastJson = gson.toJson(addressList);
 			response.setContentType("application/octet-stream");
 			response.setHeader("Content-Disposition", String.format("inline; filename=\"AddressBook."+FILE_TYPE+"\""));
 			response.setContentLength(lastJson.length());
 			
-			InputStream inputStream = new ByteArrayInputStream(lastJson.getBytes());
-			OutputStream outputStream = response.getOutputStream();
+			inputStream = new ByteArrayInputStream(lastJson.getBytes());
+			outputStream = response.getOutputStream();
 			IOUtils.copy(inputStream, outputStream);
-				
-			inputStream.close();
-			outputStream.close();
+			IOUtils.closeQuietly(inputStream);	
 			
 		} catch (IOException e) {
-			
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			
+		} finally {
+			try {
+				
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+				outputStream.close();
+				
+			} catch (IOException e) {
+				redirectAttributes.addFlashAttribute("error", e.getMessage());
+			}
 		}
 	}
 }
