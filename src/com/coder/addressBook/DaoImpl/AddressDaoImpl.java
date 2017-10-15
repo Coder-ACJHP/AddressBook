@@ -20,7 +20,7 @@ public class AddressDaoImpl implements AddressDao {
 	@Override
 	public Address findAddressByName(String name) {
 		final Session session = sessionFactory.getCurrentSession();
-		Query<Address> query = session.createQuery("from Address where firstName=:theName", Address.class);
+		Query<Address> query = session.createQuery("from Address where firstName=:theName order by firstName", Address.class);
 		query.setParameter("theName", name);
 		Address resultAddress = query.getSingleResult();
 		return resultAddress;
@@ -56,10 +56,19 @@ public class AddressDaoImpl implements AddressDao {
 	}
 
 	@Override
-	public List<Address> findAddressesByAnyText(String wordText) {
+	public List<Address> searchAddress(String wordText) {
+		
 		final Session session = sessionFactory.getCurrentSession();
-		Query<Address> query = session.createQuery("from Address where lower(firstName) like:theWord", Address.class);
-		query.setParameter("theWord", "%" +wordText.toLowerCase()+ "%");
+		Query<Address> query  = null;
+		
+		if(wordText != null && wordText.trim().length() > 0) {
+			query = session.createQuery("from Address where lower(firstName) like:theWord or lower(lastName) like:theWord", Address.class);
+			query.setParameter("theWord", "%" +wordText.toLowerCase()+ "%");
+		}
+		
+		else {
+			query = session.createQuery("from Address", Address.class);
+		}
 		return query.getResultList();
 	}
 

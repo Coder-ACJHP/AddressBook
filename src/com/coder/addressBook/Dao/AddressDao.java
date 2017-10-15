@@ -16,5 +16,5 @@ public interface AddressDao {
 
 	public void delete(int id);
 
-	public List<Address> findAddressesByAnyText(String wordText);
+	public List<Address> searchAddress(String wordText);
 }

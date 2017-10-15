@@ -16,5 +16,5 @@ public interface ServiceDao {
 
 	public void deleteAddressById(int id);
 
-	public List<Address> findAddressByAnyText(String wordText);
+	public List<Address> searchAddress(String wordText);
 }

@@ -50,8 +50,8 @@ public class ServiceDaoImpl implements ServiceDao {
 
 	@Override
 	@Transactional
-	public List<Address> findAddressByAnyText(String wordText) {
-		return addressDao.findAddressesByAnyText(wordText);
+	public List<Address> searchAddress(String wordText) {
+		return addressDao.searchAddress(wordText);
 	}
 
 }

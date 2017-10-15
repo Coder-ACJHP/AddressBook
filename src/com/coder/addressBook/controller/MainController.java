@@ -19,13 +19,12 @@ public class MainController {
 
 	@Autowired
 	private ServiceDao serviceDao;
-	
-	
+
 	@GetMapping("/")
 	public String welcomeToHome() {
 		return "home";
 	}
-	
+
 	@GetMapping("/allAddressess")
 	public String goToListPage(Model model) {
 
@@ -34,60 +33,51 @@ public class MainController {
 
 		return "table";
 	}
-	
+
 	@GetMapping("addAddress")
 	public String addAddress(Model model) {
-		
+
 		Address theAddress = new Address();
 		model.addAttribute("address", theAddress);
-		
+
 		return "edit";
 	}
-	
+
 	@GetMapping("editAddress")
 	public String editAddress(@RequestParam("addressId") int Id, Model model) {
-		
-		if(Id > 0) {
+
+		if (Id > 0) {
 			Address theAddress = serviceDao.findAddressById(Id);
 			model.addAttribute("address", theAddress);
 		}
 		return "edit";
 	}
-	
+
 	@PostMapping("editProcess")
-	public String saveEdit(@ModelAttribute("address") Address address, 
-										RedirectAttributes redirectAttrs) {
-		if(address != null) {
+	public String saveEdit(@ModelAttribute("address") Address address, RedirectAttributes redirectAttrs) {
+		if (address != null) {
 			serviceDao.save(address);
 			redirectAttrs.addFlashAttribute("message", "Address updated or saved successfully.");
 		}
-		
+
 		return "redirect:allAddressess";
 	}
-	
+
 	@GetMapping("deleteAddress")
-	public String deleteAddress(@RequestParam("addressId") int Id, 
-										RedirectAttributes redirectAttrs) {
-		if(Id > 0) {
+	public String deleteAddress(@RequestParam("addressId") int Id, RedirectAttributes redirectAttrs) {
+		if (Id > 0) {
 			serviceDao.deleteAddressById(Id);
 			redirectAttrs.addFlashAttribute("message", "Address deleted successfully.");
 		}
-		
+
 		return "redirect:allAddressess";
 	}
-	
+
 	@PostMapping("search")
 	public String search(@RequestParam("word") String wordText, Model model) {
-		
-		if(wordText != null && wordText.length() > 0) {
-			
-			List<Address> theAddresses = serviceDao.findAddressByAnyText(wordText);
-			model.addAttribute("addressList", theAddresses);
-			return "table";
-			
-		}else {
-			//to load all addresses from db
-			return "redirect:allAddressess";
-		}
+
+		List<Address> theAddresses = serviceDao.searchAddress(wordText);
+		model.addAttribute("addressList", theAddresses);
+		return "table";
 	}
 }
