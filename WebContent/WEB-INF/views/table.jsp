@@ -46,6 +46,7 @@
 			      <th>Id</th>
 			      <th>First Name</th>
 			      <th>Last Name</th>
+			      <th>Country</th>
 			      <th>City</th>
 			      <th>District</th>
 			      <th>Street</th>
@@ -67,6 +68,7 @@
 				      <th scope="row"><c:out value="${address.id}" /></th>
 				      <td><c:out value="${address.firstName}" /></td>
 				      <td><c:out value="${address.lastName}" /></td>
+				      <td><c:out value="${address.country}" /></td>
 				      <td><c:out value="${address.city}" /></td>
 				      <td><c:out value="${address.district}" /></td>
 				      <td><c:out value="${address.street}" /></td>
